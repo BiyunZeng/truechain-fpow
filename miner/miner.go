@@ -71,7 +71,7 @@ func New(eth Backend, config *params.ChainConfig, mux *event.TypeMux, engine con
 	return miner
 }
 
-// update keeps track of the downloader events. Please be aware that this is a one shot type of update loop.
+// update keeps track of the downloader events. Please be aware that this is a one shot 我type of update loop.
 // It's entered once and as soon as `Done` or `Failed` has been broadcasted the events are unregistered and
 // the loop is exited. This to prevent a major security vuln where external parties can DOS you with blocks
 // and halt your mining operation for as long as the DOS continues.
@@ -101,6 +101,7 @@ out:
 			break out
 		}
 	}
+	log.Info("end update")
 }
 
 func (self *Miner) Start(coinbase common.Address) {

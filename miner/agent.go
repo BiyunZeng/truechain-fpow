@@ -122,8 +122,10 @@ func (self *CpuAgent) mine(work *Work, stop <-chan struct{}) {
 	send := make(chan *types.Block, 10)
 	abort := make(chan struct{})
 	go self.engine.ConSeal(self.chain, work.Block, abort, send)
-
+	
 	var result *types.Block
+	//self.returnCh <- &Result{work, result}
+	//return 
 	mineloop:
 	for {
 		select {

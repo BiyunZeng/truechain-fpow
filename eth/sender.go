@@ -1,6 +1,6 @@
 package eth
 import (
-	"fmt"
+	//"fmt"
 	"time"
 	"math/rand"
 	"math/big"
@@ -31,6 +31,23 @@ func newSendTransaction(from *ecdsa.PrivateKey, nonce uint64, datasize int) *typ
 	return tx
 }
 
+
+
+
+func (sender *RecordSender)Start() {
+	go sender.send()
+}
+
+func NewSender(txpool  *core.TxPool) *RecordSender {
+	sendRecord:= &RecordSender{
+		txpool: txpool,
+	}
+	// TODO: get key and account address to send
+
+	return sendRecord
+}
+
+
 func (sender *RecordSender)send() {
 	var nonce uint64
 	ticker := time.NewTicker(sendInterval)
@@ -53,26 +70,13 @@ func (sender *RecordSender)send() {
 
 			prd := types.NewPbftRecord(ph, txs, nil)
 
-			fmt.Print(prd)
+			//fmt.Print(prd)
 
 			var records []*types.PbftRecord
 			records = append(records, prd)
 
 			sender.txpool.AddRemoteRecords(records)
+
 		}
 	}
-}
-
-
-func (sender *RecordSender)Start() {
-	go sender.send()
-}
-
-func NewSender(txpool  *core.TxPool) *RecordSender {
-	sendRecord:= &RecordSender{
-		txpool: txpool,
-	}
-	// TODO: get key and account address to send
-
-	return sendRecord
 }
