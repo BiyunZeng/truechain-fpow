@@ -479,7 +479,7 @@ func (self *worker) wait() {
 // push sends a new work task to currently live miner agents.
 func (self *worker) push(work *Work) {
 	if atomic.LoadInt32(&self.mining) != 1 {
-		return
+		return   //neo mark 20180701
 	}
 	for agent := range self.agents {
 		atomic.AddInt32(&self.atWork, 1)
@@ -615,13 +615,57 @@ func (self *worker) commitNewWork() {
 	if self.config.DAOForkSupport && self.config.DAOForkBlock != nil && self.config.DAOForkBlock.Cmp(header.Number) == 0 {
 		misc.ApplyDAOHardFork(work.state)
 	}
-	pending, err := self.eth.TxPool().Pending()
+	//pending, err := self.eth.TxPool().Pending()
+	//func (pool *TxPool) Pending() (map[common.Address]types.Transactions, error)
+	//PendingRecords, err := self.eth.TxPool().PendingRecords() 
+	PendingRecords,err := self.eth.TxPool().PendingRecords() 
+	PengdingFruit,err := self.eth.TxPool().PendingFruits()
 	if err != nil {
 		log.Error("Failed to fetch pending transactions", "err", err)
 		return
 	}
-	txs := types.NewTransactionsByPriceAndNonce(self.current.signer, pending)
-	work.commitTransactions(self.mux, txs, self.chain, self.coinbase)
+
+
+	
+	log.Info("s",PendingRecords)
+	log.Info("s",PengdingFruit)
+
+	/*
+	self.current.txs :=PendingRecords->t
+
+	type Work struct {
+		config *params.ChainConfig
+		signer types.Signer
+	
+		state     *state.StateDB // apply state changes here
+		ancestors *set.Set       // ancestor set (used for checking uncle parent validity)
+		family    *set.Set       // family set (used for checking uncle invalidity)
+		uncles    *set.Set       // uncle set
+		tcount    int            // tx count in cycle
+		gasPool   *core.GasPool  // available gas used to pack transactions
+	
+		Block *types.Block // the new block
+	
+		FruitSet []*types.Block //the for fruitset
+	
+		header   *types.Header
+		txs      []*types.Transaction
+		receipts []*types.Receipt
+		fruits	 []*types.Block // for the fresh neo20180627
+	
+		createdAt time.Time
+	}
+	
+*/
+
+
+	//txs := PendingRecords.
+
+	//txs := types.NewTransactionsByPriceAndNonce(self.current.signer, pending)
+	//txs := types.NewTransactionsByPriceAndNonce(self.current.signer, PendingRecords)
+	//work.commitTransactions(self.mux, txs, self.chain, self.coinbase)
+	work.commitTransactions(self.mux, nil, self.chain, self.coinbase)
+
 
 	// compute uncles for the new block.
 	var (

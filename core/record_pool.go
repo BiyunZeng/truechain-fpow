@@ -52,6 +52,9 @@ func (pool *TxPool) PendingRecords() (*types.PbftRecord, error) {
 	//TODO: get the first record in the pool
 
 	first := pool.recordList.Front()
+	if first == nil{
+		return nil, nil
+	}
 	record := pool.recordList.Remove(first).(*types.PbftRecord)
 
 	return record, nil
