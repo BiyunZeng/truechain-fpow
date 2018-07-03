@@ -10,6 +10,7 @@ import (
 type PbftRecordHeader struct {
 	Number   *big.Int
 	Hash     common.Hash
+	TxHash   common.Hash
 	GasLimit *big.Int
 	GasUsed  *big.Int
 	Time     *big.Int
