@@ -1,6 +1,7 @@
 package types
 
 import (
+	"time"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
